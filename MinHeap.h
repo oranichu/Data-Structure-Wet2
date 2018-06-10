@@ -14,6 +14,7 @@ public:
 };
 
 class NoElements : public MinHeapException {
+public:
     virtual const char *what() const throw() {
         return "No Min in heap , there are no elements.";
     };

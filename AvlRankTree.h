@@ -3,36 +3,32 @@
 
 #include <iostream>
 
-////////////////////////////////////
-#include <string>
 
 #define GO_LEFT (-1)
 #define GO_RIGHT (1)
 #define EQUAL (0)
-
-using std::string;
-
-using std::cout;
-using std::endl;
-///////////////////////////////////
 
 
 typedef enum {
     LEFT, RIGHT
 } Place;
 
-//Help us determent weather to add to the sum or dec from it.
-typedef enum {
-    ADD, DEC
-} FuncOp;
+class AvlTreeExceptions : public std::exception {
+};
 
+class InvalidRank : public AvlTreeExceptions {
+public:
+    virtual const char *what() const throw() {
+        return "Desired rank is bigger than number of nodes in tree";
+    };
+};
 
-int maxFunc(int x1, int x2) {
-    if (x1 > x2) {
-        return x1;
-    }
-    return x2;
-}
+class NoElementsInTree : public AvlTreeExceptions {
+public:
+    virtual const char *what() const throw() {
+        return "No elements in tree.";
+    };
+};
 
 template<typename T, typename U>
 class AvlNode {
@@ -359,6 +355,33 @@ private:
         return balance(current, rankVal);
     }
 
+    int maxFunc(int x1, int x2) {
+        if (x1 > x2) {
+            return x1;
+        }
+        return x2;
+    }
+
+    U recGetKSum(AvlNode<T, U> *node, int k) {
+        if (k == node->getRank()) {
+            return node->getRankSum();
+        } //k can't be bigger than root rank.
+        if (node->getLeftSon() != NULL) {
+            //Rank is bigger than all left sub-tree , add it and go right.
+            if (k > node->getLeftSon()->getRank() + 1) {
+                return node->getLeftSon()->getRankSum() + node->getRankValue() +
+                       recGetKSum(node->getRightSon(),
+                                  k - node->getLeftSon()->getRank() - 1);
+            }
+            //Rank equals to root + left tree ;
+            if (k == node->getLeftSon()->getRank() + 1) {
+                return node->getLeftSon()->getRankSum() + node->getRankValue();
+            }
+            //Rank is smaller than left tree rank
+            return recGetKSum(node->getLeftSon(), k);
+        }
+    }
+
 public:
     AvlTree() : root(NULL), size(0) {};
 
@@ -424,6 +447,16 @@ public:
         return true;
     }
 
+    U getKSum(int k) {
+        if (root == NULL) {
+            throw NoElementsInTree();
+        }
+        if (k > root->getRank()) {
+            throw InvalidRank();
+        }
+        recGetKSum(root, k);
+    }
+
     void treeDestroy(AvlNode<T, U> *node) {
         if (node == NULL) {
             return;
@@ -433,97 +466,7 @@ public:
         delete (node);
     }
 
-//////////////////////////////////////////////////////////////
-    void printCheck(AvlNode<T, U> *node) {
-        while (node->getLeftSon() != NULL) {
-            cout << node->getData() << " ";
-            node = node->getLeftSon();
-        }
-        cout << endl;
-        while (node != root) {
-            cout << node->getData() << " ";
-            node = node->getFather();
-        }
-    }
-
 };
-
-/////////////////////////////////////////////////////////////
-struct Trunk {
-    Trunk *prev;
-    string str;
-
-    Trunk(Trunk *prev, string str) {
-        this->prev = prev;
-        this->str = str;
-    }
-};
-
-// Helper function to print branches of the binary tree
-void showTrunks(Trunk *p) {
-    if (p == NULL)
-        return;
-    showTrunks(p->prev);
-    cout << p->str;
-}
-
-// Recursive function to print binary tree. It uses inorder traversal
-// call as printTree(root, NULL, false);
-void printTree(AvlNode<int, int> *root, Trunk *prev, bool isLeft) {
-    if (root == NULL)
-        return;
-
-    string prev_str = " ";
-    Trunk *trunk = new Trunk(prev, prev_str);
-    printTree(root->getLeftSon(), trunk, true);
-
-    if (!prev)
-        trunk->str = "---";
-    else if (isLeft) {
-        trunk->str = ".---";
-        prev_str = "  |";
-    } else {
-        trunk->str = "`---";
-        prev->str = prev_str;
-    }
-
-    showTrunks(trunk);
-    cout << root->getData() << endl;
-    if (prev)
-        prev->str = prev_str;
-
-    trunk->str = "  |";
-    printTree(root->getRightSon(), trunk, false);
-}
-
-void printRank(AvlNode<int, int> *root, Trunk *prev, bool isLeft) {
-    if (root == NULL)
-        return;
-
-    string prev_str = " ";
-    Trunk *trunk = new Trunk(prev, prev_str);
-    printRank(root->getLeftSon(), trunk, true);
-
-    if (!prev)
-        trunk->str = "---";
-    else if (isLeft) {
-        trunk->str = ".---";
-        prev_str = "  |";
-    } else {
-        trunk->str = "`---";
-        prev->str = prev_str;
-    }
-
-    showTrunks(trunk);
-    cout << root->getRankSum() << endl;
-    if (prev)
-        prev->str = prev_str;
-
-    trunk->str = "  |";
-    printRank(root->getRightSon(), trunk, false);
-}
-///////////////////////////////////////////////////////////////////////
-
 
 
 #endif //GENTREE_AVLTREE_H
