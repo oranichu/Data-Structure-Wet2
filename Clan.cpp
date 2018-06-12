@@ -17,10 +17,22 @@ int Clan::getSize() { return player_tree.getSize(); }
 
 bool Clan::operator!=(Clan c) { return id != c.id; }
 
+bool Clan::canFight() {
+    return status == ABLE_TO_FIGHT;
+}
+
+void Clan::clanDefeted() {
+    status = DEFETED;
+}
+
+const AvlTree<Player, int, PlayerCompareScore> &Clan::getPlayersTree() const {
+    return player_tree;
+}
+
 void updateIndex::operator()(Clan *clan, int i) {
     clan->setHeapIndex(i);
 }
 
-void getClanID::operator()(Clan *clan) {
-    clan->getId();
+int getClanID::operator()(Clan *clan) {
+    return clan->getId();
 }

@@ -57,13 +57,13 @@ public:
 
     void blindInsert(const T &data) {
         Node<T> *node = new Node<T>(data);
-        Node<T> *next = head->getNext();
-        node->setNext(next);
-        node->setPrev(head);
-        head->setNext(node);
-        if (next != NULL) {
-            next->setPrev(node);
+        if (head==NULL) {
+            head = node ;
+            return ;
         }
+        node->setNext(head);
+        head->setPrev(node);
+        head=node ;
         size++;
     }
 
@@ -104,7 +104,10 @@ public:
     }
 
     Node<T> *getFirst() {
-        itr = head->getNext();
+        if (head==NULL) {
+            return NULL ;
+        }
+        itr = head;
         return itr;
     }
 

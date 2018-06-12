@@ -14,25 +14,26 @@ class Hash {
     int occupancy;
     List<T> **arr;
     GETKEY getKey;
-    T emptyValue;
 
 private:
     int hash(const T &data) {
-        double key = getKey(data);
-        key *= 0.61803398875;
-        key = fmod(key,1);
-        key = key * size;
-        return (int)key;
+        /* int key = getKey(data);
+         key *= 0.61803398875;
+         key = fmod(key, 1);
+         key = key * size;
+         return (int) key;
+         */
+        return getKey(data) % size;
     }
 
-    void createListArr(){
-        arr = new List<T>*[occupancy*4];
-        for (int i = 0; i < occupancy*4; ++i) {
-            arr[i] = new List<T>(emptyValue);
+    void createListArr() {
+        arr = new List<T> *[occupancy * 4];
+        for (int i = 0; i < occupancy * 4; ++i) {
+            arr[i] = new List<T>();
         }
     }
 
-    void destroyListArr(List<T>** listArr, int size){
+    void destroyListArr(List<T> **listArr, int size) {
         for (int i = 0; i < size; ++i) {
             delete listArr[i];
         }
@@ -41,7 +42,7 @@ private:
 
     void resize() {
         int tempSize = size;
-        size = occupancy*4;
+        size = occupancy * 4;
         List<T> **tempArr = arr;
         createListArr();
         int place;
@@ -58,14 +59,12 @@ private:
     }
 
 public:
-    Hash(T *array, int size, const T& emptyValue) : size(size * 4)
-            , occupancy(size), emptyValue(emptyValue) {
+    Hash(T *array, int size) : size(size * 4), occupancy(size) {
         createListArr();
         int place;
         for (int i = 0; i < size; ++i) {
-            place = hash(*array);
+            place = hash(*(array + i));
             arr[place]->blindInsert(*array);
-            array++;
         }
     }
 
@@ -73,55 +72,49 @@ public:
         destroyListArr(arr, size);
     }
 
-    bool insert(const T& data){
+    bool insert(const T &data) {
         int place = hash(data);
         bool added = arr[place]->insert(data);
-        if (added){
+        if (added) {
             occupancy++;
-            if (occupancy*2 >= size){
+            if (occupancy * 2 >= size) {
                 resize();
             }
         }
         return false;
     }
 
-    Node<T>* find(const T& key){
+    Node<T> *find(const T &key) {
         int place = hash(key);
         return arr[place]->find(key);
     }
 
-    bool destroy(const T& key){
+    bool destroy(const T &key) {
         int place = hash(key);
         bool destroyed = arr[place]->destroy(key);
-        if (destroyed){
+        if (destroyed) {
             occupancy--;
-            if (occupancy*8 <= size){
+            if (occupancy * 8 <= size) {
                 resize();
             }
         }
         return false;
     }
 
-    int getSize(){
+    int getSize() {
         return occupancy;
-    }
-
-    void printInt(){
-        for (int i = 0; i < size; ++i) {
-            cout << "[" << i << "] List -> ";
-            Node<T>* curr = arr[i]->getFirst();
-            while (curr != NULL){
-                cout << "[ " << curr->getData() << " ] -> ";
-                curr = curr->getNext();
-            }
-            cout << "NULL" << endl;
-        }
     }
 
     //Help us delete the info inside the element T (in
     void deleteElements() {
         for (int i = 0; i < size; ++i) {
-            delete *arr[i];
+            if (arr[i] != NULL) {
+                Node<T> *node = arr[i]->getFirst();
+                while (node != NULL) {
+                    delete node->getData();
+                    node->getNext();
+                }
+            }
         }
     }
 };

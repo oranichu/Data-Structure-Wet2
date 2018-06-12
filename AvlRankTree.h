@@ -361,7 +361,7 @@ private:
         return x2;
     }
 
-    U recGetKSum(AvlNode<T, U> *node, int k) {
+    U recGetKSum(AvlNode<T, U> *node, int k) const {
         if (k == node->getRank()) {
             return node->getRankSum();
         } //k can't be bigger than root rank.
@@ -446,7 +446,7 @@ public:
         return true;
     }
 
-    U getKSum(int k) {
+    U getKSum(int k) const {
         if (root == NULL) {
             throw NoElementsInTree();
         }

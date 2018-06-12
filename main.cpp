@@ -1,8 +1,16 @@
 #include <iostream>
 #include "AvlRankTree.h"
 #include "Player.h"
+#include "Oasis.h"
 
 int main() {
+
+    int clanId[10] ;
+    for (int i=0 ; i<10 ; i++){
+        clanId[i]=i ;
+    }
+    Oasis o(10,clanId) ;
+
     std::cout << "Hello, World!" << std::endl;
     AvlTree<Player,int,PlayerCompareScore> t ;
     for (int i=1 ; i<50 ; i++) {

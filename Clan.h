@@ -36,6 +36,12 @@ public:
 
     bool operator!=(Clan c);
 
+    void clanDefeted();
+
+    bool canFight();
+
+    const AvlTree<Player,int,PlayerCompareScore> & getPlayersTree() const ;
+
 
 };
 
@@ -46,7 +52,7 @@ public:
 
 class getClanID {
 public:
-    void operator()(Clan *clan);
+    int operator()(Clan *clan);
 };
 
 
