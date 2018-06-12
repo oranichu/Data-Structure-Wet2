@@ -70,7 +70,7 @@ public:
     }
 
     ~Hash() {
-       destroyListArr(arr, size);
+        destroyListArr(arr, size);
     }
 
     bool insert(const T& data){

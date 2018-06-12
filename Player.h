@@ -23,12 +23,12 @@ public:
 
 class PlayerCompareScore {
 public:
-    Direction operator()(Player p1, Player p2);
+    int operator()(Player p1, Player p2);
 };
 
 class PlayerCompareId {
 public:
-    Direction operator()(Player p1, Player p2);
+    int operator()(Player p1, Player p2);
 };
 
 

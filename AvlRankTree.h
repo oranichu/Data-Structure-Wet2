@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-
 #define GO_LEFT (-1)
 #define GO_RIGHT (1)
 #define EQUAL (0)
