@@ -22,27 +22,31 @@ class Clan {
 
 
 public:
-    Clan(int id, int size) : id(id), status(ABLE_TO_FIGHT),
-                             heapIndex(-1) {}
+    Clan(int id);
 
-    void setHeapIndex(int i) { heapIndex = i; }
+    void setHeapIndex(int i);
 
-    int getHeapIndex() const { return heapIndex; }
+    int getId() const { return id ;}
 
-    void addPlayer(Player p) { player_tree.insert(p, p.getScore()); }
+    int getHeapIndex() const;
 
-    int getSize() { return player_tree.getSize(); }
+    void addPlayer(Player p);
 
-    bool operator!=(Clan c) { return id != c.id; }
+    int getSize();
+
+    bool operator!=(Clan c);
 
 
 };
 
 class updateIndex {
 public:
-    void operator()(Clan *clan, int i) {
-        clan->setHeapIndex(i);
-    }
+    void operator()(Clan *clan, int i);
+};
+
+class getClanID {
+public:
+    void operator()(Clan *clan);
 };
 
 

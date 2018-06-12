@@ -117,6 +117,13 @@ public:
             cout << "NULL" << endl;
         }
     }
+
+    //Help us delete the info inside the element T (in
+    void deleteElements() {
+        for (int i = 0; i < size; ++i) {
+            delete *arr[i];
+        }
+    }
 };
 
 #endif //GENTREE_HASH_H
