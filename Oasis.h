@@ -40,11 +40,14 @@ class Oasis {
     MinHeap<Clan *, int, updateIndex> *clans_min_heap;
     AvlTree<Player, int, PlayerCompareId> players_tree;
 
+    List<Clan *> clans_list;
+
 public:
     Oasis(int n, int *clanIDs) {
         Clan **clan_arr = new Clan *[n];
         for (int i = 0; i < n; i++) {
             clan_arr[i] = new Clan(clanIDs[i]);
+            clans_list.insert(clan_arr[i]);
         }
         int min = -1;
         clans_hash = new Hash<Clan *, getClanID>(clan_arr, n );
@@ -56,8 +59,14 @@ public:
     }
 
     ~Oasis() {
+        Node<Clan*> *node = clans_list.getFirst();
+        while (node != NULL ) {
+            delete(node->getData());
+            node=node->getNext();
+        }
         delete clans_min_heap;
-        clans_hash->deleteElements(); //deletes all clans made.
+
+      //  clans_hash->deleteElements(); //deletes all clans made.
         delete clans_hash;
     }
 
@@ -71,6 +80,7 @@ public:
             throw OasisFailure();
         }
         clans_hash->insert(new_clan);
+        clans_list.insert(new_clan);
         clans_min_heap->insert(new_clan, clanId);
     }
 

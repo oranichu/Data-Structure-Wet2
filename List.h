@@ -76,6 +76,9 @@ public:
     }
 
     Node<T> *find(const T &data) {
+        if (head==NULL) {
+            return NULL ;
+        }
         Node<T> *curr = head;
         T key(data);
         while (curr->getData() != key) {
