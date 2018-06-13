@@ -33,6 +33,6 @@ void updateIndex::operator()(Clan *clan, int i) {
     clan->setHeapIndex(i);
 }
 
-int getClanID::operator()(Clan *clan) {
-    return clan->getId();
+int getClanID::operator()(const Clan& clan) {
+    return clan.getId();
 }

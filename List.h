@@ -16,9 +16,7 @@ class Node {
 public:
     explicit Node(const T &data) : data(data), next(NULL), prev(NULL) {}
 
-    const T &getData() { return data; }
-
-    void setData(const T &data) { this->data = data; };
+    T &getData() { return data; }
 
     Node<T> *getNext() { return next; }
 

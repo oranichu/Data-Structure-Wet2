@@ -59,12 +59,12 @@ private:
     }
 
 public:
-    Hash(T *array, int size) : size(size * 4), occupancy(size) {
+    Hash(T **array, int size) : size(size * 4), occupancy(size) {
         createListArr();
         int place;
         for (int i = 0; i < size; ++i) {
-            place = hash(*(array + i));
-            arr[place]->blindInsert(*array);
+            place = hash(**(array + i));
+            arr[place]->blindInsert(**array);
         }
     }
 

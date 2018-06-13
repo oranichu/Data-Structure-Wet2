@@ -52,7 +52,7 @@ public:
 
 class getClanID {
 public:
-    int operator()(Clan *clan);
+    int operator()(const Clan& clan) ;
 };
 
 

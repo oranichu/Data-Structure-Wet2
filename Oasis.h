@@ -36,21 +36,17 @@ public:
 
 
 class Oasis {
-    Hash<Clan *, getClanID> *clans_hash;
+    Hash<Clan , getClanID> *clans_hash;
     MinHeap<Clan *, int, updateIndex> *clans_min_heap;
     AvlTree<Player, int, PlayerCompareId> players_tree;
-
-    List<Clan *> clans_list;
-
 public:
     Oasis(int n, int *clanIDs) {
         Clan **clan_arr = new Clan *[n];
         for (int i = 0; i < n; i++) {
             clan_arr[i] = new Clan(clanIDs[i]);
-            clans_list.insert(clan_arr[i]);
         }
         int min = -1;
-        clans_hash = new Hash<Clan *, getClanID>(clan_arr, n );
+        clans_hash = new Hash<Clan , getClanID>(clan_arr, n );
         clans_min_heap = new MinHeap<Clan *, int, updateIndex>(clan_arr,
                                                                clanIDs, n,
                                                                INVALID_CLAN_ID,
@@ -59,11 +55,6 @@ public:
     }
 
     ~Oasis() {
-        Node<Clan*> *node = clans_list.getFirst();
-        while (node != NULL ) {
-            delete(node->getData());
-            node=node->getNext();
-        }
         delete clans_min_heap;
 
       //  clans_hash->deleteElements(); //deletes all clans made.
@@ -74,29 +65,25 @@ public:
         if (clanId < MIN_CLAN_ID) {
             throw InvalidInput();
         }
-        Clan *new_clan = new Clan(clanId); //clan will be deleted in ~Oasis.
+        Clan new_clan(clanId); //clan will be deleted in ~Oasis.
         if (clans_hash->find(new_clan) != NULL) {
-            delete new_clan;
             throw OasisFailure();
         }
         clans_hash->insert(new_clan);
-        clans_list.insert(new_clan);
-        clans_min_heap->insert(new_clan, clanId);
+        clans_min_heap->insert(&new_clan, clanId);
     }
 
     void addPlayer(int playerId, int score, int clanId) {
         if (clanId < 0 || playerId < 0 || score < 0) {
             throw InvalidInput();
         }
-        Clan *clan = new Clan(clanId);
+        Clan clan(clanId);
         Player p(playerId, score);
         if (clans_hash->find(clan) == NULL || players_tree.find(p) != NULL) {
-            delete clan;
             throw OasisFailure();
         }
         players_tree.insert(p, DEFAULT_SUM);
-        clans_hash->find(clan)->getData()->addPlayer(p);
-        delete clan;
+        clans_hash->find(clan)->getData().addPlayer(p);
     }
 
     void clanFight(int clan1Id, int clan2Id, int k1, int k2) {
@@ -104,31 +91,29 @@ public:
             k2 <= 0) {
             throw InvalidInput();
         }
-        Clan *clan1 = new Clan(clan1Id);
-        Clan *clan2 = new Clan(clan2Id);
-        Node<Clan *> *clan1_node = clans_hash->find(clan1);
-        Node<Clan *> *clan2_node = clans_hash->find(clan2);
-        delete (clan1);
-        delete (clan2);
+        Clan clan1(clan1Id);
+        Clan clan2(clan2Id);
+        Node<Clan > *clan1_node = clans_hash->find(clan1);
+        Node<Clan > *clan2_node = clans_hash->find(clan2);
         if (clan1_node == NULL || clan2_node == NULL) {
             throw OasisFailure();
         }
-        if (clan1_node->getData()->canFight() == false ||
-            clan2_node->getData()->canFight() == false) {
+        if (clan1_node->getData().canFight() == false ||
+            clan2_node->getData().canFight() == false) {
             throw OasisFailure();
         }
         try { // getting k1 sum and k2 sum .
-            int sum1 = clan1_node->getData()->getPlayersTree().getKSum(k1);
-            int sum2 = clan1_node->getData()->getPlayersTree().getKSum(k2);
+            int sum1 = clan1_node->getData().getPlayersTree().getKSum(k1);
+            int sum2 = clan1_node->getData().getPlayersTree().getKSum(k2);
             if (sum1 > sum2) {//clan1 won.
-                clan2_node->getData()->clanDefeted();
+                clan2_node->getData().clanDefeted();
             } else if (sum1 < sum2) { //clan2 won.
-                clan1_node->getData()->clanDefeted();
-            } else if (clan1_node->getData()->getId() < //Tie
-                       clan2_node->getData()->getId()) {
-                clan2_node->getData()->clanDefeted(); //clan1 id is smaller.
+                clan1_node->getData().clanDefeted();
+            } else if (clan1_node->getData().getId() < //Tie
+                       clan2_node->getData().getId()) {
+                clan2_node->getData().clanDefeted(); //clan1 id is smaller.
             } else { //clan2 id is smaller.
-                clan1_node->getData()->clanDefeted();
+                clan1_node->getData().clanDefeted();
             }
         } catch (InvalidRank e) { //if k1 or k2 are smaller than clan size.
             throw OasisFailure();

@@ -11,6 +11,10 @@ int main() {
     }
     Oasis o(10,clanId) ;
 
+    int minClan;
+    o.getMinClan(&minClan);
+    std::cout << "min clan is : " << minClan << std::endl;
+
     std::cout << "Hello, World!" << std::endl;
     AvlTree<Player,int,PlayerCompareScore> t ;
     for (int i=1 ; i<50 ; i++) {
