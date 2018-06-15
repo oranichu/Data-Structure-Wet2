@@ -105,18 +105,7 @@ public:
         return occupancy;
     }
 
-    //Help us delete the info inside the element T (in case of pointer).
-    void deleteElements() {
-        for (int i = 0; i < size; ++i) {
-            if (arr[i] != NULL) {
-                Node<T> *node = arr[i]->getFirst();
-                while (node != NULL) {
-                    delete node->getData();
-                    node = node->getNext();
-                }
-            }
-        }
-    }
+    
 };
 
 #endif //GENTREE_HASH_H
