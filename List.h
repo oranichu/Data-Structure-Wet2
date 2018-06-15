@@ -16,7 +16,9 @@ class Node {
 public:
     explicit Node(const T &data) : data(data), next(NULL), prev(NULL) {}
 
-    T &getData() { return data; }
+    const T &getData() { return data; }
+
+    void setData(const T &data) { this->data = data; };
 
     Node<T> *getNext() { return next; }
 
@@ -28,11 +30,12 @@ public:
 };
 
 //not complete
-template<typename T>
+template<typename T,typename Func>
 class List {
     Node<T> *head;
     Node<T> *itr;
     int size;
+    Func compareT;
 
 private:
     void destroyList(Node<T> *node) {
@@ -44,7 +47,7 @@ private:
     }
 
 public:
-    List() : size(0) {}
+    List() : head(NULL),itr(NULL), size(0) {}
 
     explicit List(const T &emptyValue) : head(new Node<T>(emptyValue)),
                                          size(0) {}
@@ -78,8 +81,7 @@ public:
             return NULL ;
         }
         Node<T> *curr = head;
-        T key(data);
-        while (curr->getData() != key) {
+        while (compareT(curr->getData(),data)==false) {
             curr = curr->getNext();
             if (curr == NULL) {
                 return NULL;
@@ -119,16 +121,6 @@ public:
     Node<T> *getNext() {
         itr = itr->getNext();
         return itr;
-    }
-
-    /// for testing ///
-    void printInt() {
-        Node<T> *curr = head;
-        while (curr != NULL) {
-            std::cout << "[ " << curr->getData() << " ] -> ";
-            curr = curr->getNext();
-        }
-        std::cout << "NULL" << std::endl;
     }
 };
 

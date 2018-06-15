@@ -83,6 +83,7 @@ private:
     void expandArray() {
         size *= 2;
         MinHeapNode **temp = new MinHeapNode *[size];
+        temp[0]=NULL ;
         for (int i = 1; i < last; i++) {
             temp[i] = arr[i];
         }

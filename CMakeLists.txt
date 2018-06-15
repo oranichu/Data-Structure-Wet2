@@ -3,4 +3,4 @@ project(Mivne_Wet2)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Mivne_Wet2 main.cpp Hash.h List.h MinHeap.h AvlRankTree.h Player.cpp Player.h Clan.cpp Clan.h library2.h library2.cpp Oasis.cpp Oasis.h library2.h)
+add_executable(Mivne_Wet2 main.cpp Hash.h List.h MinHeap.h AvlRankTree.h Player.cpp Player.h Clan.cpp Clan.h library2.h library2.cpp Oasis.cpp Oasis.h library2.h library2.h)

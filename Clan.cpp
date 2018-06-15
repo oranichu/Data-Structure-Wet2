@@ -4,8 +4,7 @@
 
 #include "Clan.h"
 
-Clan::Clan(int id) : id(id), status(ABLE_TO_FIGHT),
-                     heapIndex(-1) {}
+Clan::Clan(int id) : id(id), heapIndex(-1) {status=ABLE_TO_FIGHT;}
 
 void Clan::setHeapIndex(int i) { heapIndex = i; }
 
@@ -33,6 +32,10 @@ void updateIndex::operator()(Clan *clan, int i) {
     clan->setHeapIndex(i);
 }
 
-int getClanID::operator()(const Clan& clan) {
-    return clan.getId();
+int getClanID::operator()(Clan *clan) {
+    return clan->getId();
+}
+
+bool ClanCompareId::operator()(Clan *clan1, Clan *clan2) {
+    return clan1->getId() == clan2->getId();
 }

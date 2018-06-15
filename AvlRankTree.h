@@ -378,7 +378,11 @@ private:
             }
             //Rank is smaller than left tree rank
             return recGetKSum(node->getLeftSon(), k);
+        } // else node doesn't have left sons.
+        if (k == 1) {
+            return node->getRankValue();
         }
+        return node->getRankValue() + recGetKSum(node->getRightSon(), k - 1);
     }
 
 public:
@@ -453,7 +457,7 @@ public:
         if (k > root->getRank()) {
             throw InvalidRank();
         }
-        recGetKSum(root, k);
+        return recGetKSum(root, k);
     }
 
     void treeDestroy(AvlNode<T, U> *node) {

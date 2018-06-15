@@ -52,7 +52,12 @@ public:
 
 class getClanID {
 public:
-    int operator()(const Clan& clan) ;
+    int operator()(Clan *clan);
+};
+
+class ClanCompareId {
+public:
+    bool operator()(Clan *clan1,Clan *clan2);
 };
 
 
