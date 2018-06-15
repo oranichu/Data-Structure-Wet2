@@ -8,6 +8,19 @@
 #include "List.h"
 #include "math.h"
 
+/**
+ *
+ * @tparam T : the data type
+ * @tparam GETKEY : Object Function Type of the function that return an int key
+ * for the data. the function is injective.
+ * @tparam CompareT : Object Function Type of the function that check if 2 T
+ * objects have the same key.
+ *
+ * size : the size of arr
+ * occupancy : how many T objects arr contains.
+ * getKey : an injective function that return an int key for every T object.
+ * arr : an array of lists the contains all the T objects.
+ */
 template<typename T, typename GETKEY,typename CompareT>
 class Hash {
     int size;
@@ -24,6 +37,9 @@ private:
          return (int) key;
     }
 
+    /*
+     * create a new lists array for arr the is twice the size of occupancy.
+     */
     void createListArr() {
         arr = new List<T,CompareT> *[occupancy * 4];
         for (int i = 0; i < occupancy * 4; ++i) {
@@ -31,6 +47,9 @@ private:
         }
     }
 
+    /*
+     * destroy a lists array with all the T objects inside it.
+     */
     void destroyListArr(List<T,CompareT> **listArr, int size) {
         for (int i = 0; i < size; ++i) {
             delete listArr[i];
@@ -38,6 +57,10 @@ private:
         delete[] listArr;
     }
 
+    /*
+     * create new lists array for arr with all the previous data inside it and
+     * delete the previous lists array.
+     */
     void resize() {
         int tempSize = size;
         size = occupancy * 4;
@@ -70,6 +93,10 @@ public:
         destroyListArr(arr, size);
     }
 
+    /*
+     * insert a new data to Hash.
+     * return : false if the data was already in there.
+     */
     bool insert(const T &data) {
         int place = hash(data);
         bool added = arr[place]->insert(data);
@@ -82,11 +109,19 @@ public:
         return false;
     }
 
+    /*
+     * return a pointer to the node that contains data with the same key.
+     * NULL if there is no such node in Hash.
+     */
     Node<T> *find(const T &key) {
         int place = hash(key);
         return arr[place]->find(key);
     }
 
+    /*
+     * delete data from Hash
+     * return : false if there is no such data.
+     */
     bool destroy(const T &key) {
         int place = hash(key);
         bool destroyed = arr[place]->destroy(key);
@@ -99,22 +134,13 @@ public:
         return false;
     }
 
+    /*
+     * return the occupancy of Hash.
+     */
     int getSize() {
         return occupancy;
     }
 
-    //Help us delete the info inside the element T (in case of pointer).
-    void deleteElements() {
-        for (int i = 0; i < size; ++i) {
-            if (arr[i] != NULL) {
-                Node<T> *node = arr[i]->getFirst();
-                while (node != NULL) {
-                    delete node->getData();
-                    node = node->getNext();
-                }
-            }
-        }
-    }
 };
 
 #endif //GENTREE_HASH_H
