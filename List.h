@@ -8,6 +8,14 @@
 #include <iostream>
 
 
+
+/**
+ *
+ * @tparam T : the data type
+ * data : the data in the node
+ * next : pointer to the next node
+ * prev : pointer to the previous node
+ */
 template<typename T>
 class Node {
     T data;
@@ -29,7 +37,16 @@ public:
     void setPrev(Node<T> *prev) { this->prev = prev; }
 };
 
-//not complete
+/**
+ *
+ * @tparam T : the data type
+ * @tparam Func : the Objuect Function type of the compare function. compare
+ * between 2 T objects and return true if they are the same.
+ * head : pointer to the first node
+ * itr : pointer to the current node
+ * size : the size of the list (number of nodes)
+ * compareT : an object function that checks if 2 T objects have the same key.
+ */
 template<typename T,typename Func>
 class List {
     Node<T> *head;
@@ -38,6 +55,9 @@ class List {
     Func compareT;
 
 private:
+    /*
+     * destroy the nodes that come with and after "node"
+     */
     void destroyList(Node<T> *node) {
         if (node == NULL) {
             return;
@@ -56,6 +76,9 @@ public:
         destroyList(head);
     }
 
+    /*
+     * insert the data to the beginning of the list
+     */
     void blindInsert(const T &data) {
         Node<T> *node = new Node<T>(data);
         if (head==NULL) {
@@ -68,6 +91,11 @@ public:
         size++;
     }
 
+    /*
+     * insert the data to the beginning of the list, but only if the data
+     * wasn't in the list before.
+     * return : true if it is a new data.
+     */
     bool insert(const T &data) {
         if (find(data) == NULL) {
             blindInsert(data);
@@ -76,6 +104,10 @@ public:
         return false;
     }
 
+    /*
+     * return a pointer to a node that contain data with the same key as "data"
+     * NULL if there is not such node.
+     */
     Node<T> *find(const T &data) {
         if (head==NULL) {
             return NULL ;
@@ -90,6 +122,10 @@ public:
         return curr;
     }
 
+    /*
+     * destroy the node with the same key as "data" and tie the previous
+     * and next nodes together.
+     */
     bool destroy(const T &data) {
         Node<T> *node = find(data);
         if (node == NULL) {
@@ -106,6 +142,9 @@ public:
         return true;
     }
 
+    /*
+     * return a pointer to the first node.
+     */
     Node<T> *getFirst() {
         if (head==NULL) {
             return NULL ;
@@ -114,10 +153,16 @@ public:
         return itr;
     }
 
+    /*
+     * return a pointer to the current node.
+     */
     Node<T> *getCurr() {
         return itr;
     }
 
+    /*
+     * advance the current node indicator and return it.
+     */
     Node<T> *getNext() {
         itr = itr->getNext();
         return itr;
